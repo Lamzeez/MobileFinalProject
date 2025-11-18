@@ -5,7 +5,7 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 
 // IMPORTANT: Replace with your computer's local IP address
-const API_URL = 'http://192.168.254.107:3000';
+const API_URL = 'https://unascendent-underfoot-tessa.ngrok-free.dev';
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState('');

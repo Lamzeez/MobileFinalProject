@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, ScrollView, StyleSheet, ActivityIndicator, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
-import OpenAI from 'openai';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+
+// IMPORTANT: Replace with your computer's local IP address
+const API_URL = 'https://unascendent-underfoot-tessa.ngrok-free.dev';
 
 const FormScreen = () => {
   const router = useRouter();
+  const { userId } = useLocalSearchParams(); // Get userId from navigation params
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     school: '',
@@ -15,7 +18,7 @@ const FormScreen = () => {
     week: '',
     day: '',
     date: '',
-    learningCompetencies: '',
+    learningCompetencies: '', // This field is not sent to backend for generation, but kept for form state
     topic: '',
   });
 
@@ -24,70 +27,52 @@ const FormScreen = () => {
   };
 
   const handleGenerate = async () => {
-    console.log('handleGenerate called');
-    console.log('Form Data:', formData);
+    if (!userId) {
+      Alert.alert("Error", "User not logged in. Please log in again.");
+      router.replace('/LoginScreen');
+      return;
+    }
+
+    const { gradeLevel, subject, topic } = formData;
+
+    if (!gradeLevel || !subject || !topic) {
+      Alert.alert('Missing Information', 'Please fill in Grade Level, Subject, and Topic to generate a plan.');
+      return;
+    }
+
     setIsLoading(true);
 
-    const openai = new OpenAI({ apiKey: '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', dangerouslyAllowBrowser: true });
-
-    const prompt = `
-      You are an expert in creating educational materials following the Department of Education (DepEd) standards in the Philippines.
-      Based on the following information, generate the missing sections of a Daily Lesson Log (DLL).
-
-      **Provided Information:**
-      - **Grade Level:** ${formData.gradeLevel}
-      - **Subject:** ${formData.subject}
-      - **Lesson Title:** ${formData.topic}
-      - **Learning Competencies (Objectives):** ${formData.learningCompetencies}
-
-      **Generate the following sections:**
-      1.  **Reference Materials:** (e.g., textbook/module/pages)
-      2.  **Learning Resources:** (e.g., Textbooks, modules, worksheets, visuals, ICT tools)
-      3.  **Procedures:** (A list of 9 steps)
-          - 1. Review previous lesson / introduce new lesson
-          - 2. State lesson purpose
-          - 3. Present examples / illustrations
-          - 4. Discuss and practice concepts/skills
-          - 5. Develop mastery
-          - 6. Apply concepts in real life
-          - 7. Make generalizations / abstractions
-          - 8. Evaluate learning (quiz, oral, or performance tasks)
-          - 9. Additional activities for application/remediation
-      4.  **Remarks:** (e.g., Lesson completion, extension, or adjustments)
-      5.  **Reflection:** (A teacher's self-assessment: successes, difficulties, strategies for improvement)
-
-      Return the output as a JSON object with the following keys: "referenceMaterials", "learningResources", "proc1", "proc2", "proc3", "proc4", "proc5", "proc6", "proc7", "proc8", "proc9", "remarks", "reflection".
-      Do not include any introductory text or explanations outside of the JSON object.
-    `;
-    console.log('Prompt:', prompt);
-
     try {
-      console.log('Calling OpenAI API...');
-      const response = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo-1106', // Or another suitable model
-        messages: [{ role: 'user', content: prompt }],
-        response_format: { type: "json_object" },
+      const response = await fetch(`${API_URL}/api/generate-plan`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          grade: gradeLevel,
+          subject,
+          topic,
+        }),
       });
-      console.log('OpenAI Response:', response);
 
-      const generatedContent = JSON.parse(response.choices[0].message.content);
-      console.log('Generated Content:', generatedContent);
+      const data = await response.json();
 
-      const fullFormData = {
-        ...formData,
-        ...generatedContent,
-      };
-      console.log('Full Form Data:', fullFormData);
-
-      router.push({ pathname: '/plan', params: { formData: JSON.stringify(fullFormData) } });
-      console.log('Navigation to /plan successful');
-
+      if (response.ok && data.success) {
+        const generatedContent = data.plan; // Backend now returns the full plan string
+        const fullFormData = {
+          ...formData,
+          plan_content: generatedContent, // Store the full generated plan
+        };
+        router.push({ pathname: '/plan', params: { formData: JSON.stringify(fullFormData) } });
+      } else {
+        Alert.alert('Generation Failed', data.message || 'An unknown error occurred.');
+      }
     } catch (error) {
-      console.error('Error during generation:', error);
-      Alert.alert('Error', 'Failed to generate lesson plan. Please check your console for details.');
+      console.error('Error during plan generation:', error);
+      Alert.alert('Error', 'Failed to connect to the server or an unexpected error occurred.');
     } finally {
       setIsLoading(false);
-      console.log('handleGenerate finished');
     }
   };
 
@@ -96,25 +81,25 @@ const FormScreen = () => {
       <Text style={styles.header}>Header Information</Text>
       <TextInput style={styles.input} placeholder="School" onChangeText={(value) => handleInputChange('school', value)} />
       <TextInput style={styles.input} placeholder="Teacher" onChangeText={(value) => handleInputChange('teacher', value)} />
-      <TextInput style={styles.input} placeholder="Grade Level" onChangeText={(value) => handleInputChange('gradeLevel', value)} />
-      <TextInput style={styles.input} placeholder="Subject" onChangeText={(value) => handleInputChange('subject', value)} />
+      <TextInput style={styles.input} placeholder="Grade Level" value={formData.gradeLevel} onChangeText={(value) => handleInputChange('gradeLevel', value)} />
+      <TextInput style={styles.input} placeholder="Subject" value={formData.subject} onChangeText={(value) => handleInputChange('subject', value)} />
       <TextInput style={styles.input} placeholder="Quarter" onChangeText={(value) => handleInputChange('quarter', value)} />
       <TextInput style={styles.input} placeholder="Week" onChangeText={(value) => handleInputChange('week', value)} />
       <TextInput style={styles.input} placeholder="Day" onChangeText={(value) => handleInputChange('day', value)} />
       <TextInput style={styles.input} placeholder="Date" onChangeText={(value) => handleInputChange('date', value)} />
 
       <Text style={styles.header}>I. Objectives</Text>
-      <TextInput style={styles.textArea} placeholder="Learning competencies (MELCs)" multiline onChangeText={(value) => handleInputChange('learningCompetencies', value)} />
+      <TextInput style={styles.textArea} placeholder="Learning competencies (MELCs)" multiline value={formData.learningCompetencies} onChangeText={(value) => handleInputChange('learningCompetencies', value)} />
 
       <Text style={styles.header}>II. Content</Text>
-      <TextInput style={styles.input} placeholder="Topic / Lesson Title" onChangeText={(value) => handleInputChange('topic', value)} />
+      <TextInput style={styles.input} placeholder="Topic / Lesson Title" value={formData.topic} onChangeText={(value) => handleInputChange('topic', value)} />
 
       {isLoading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
         <Button
           title="Generate Lesson Plan"
-          onPress={async () => await handleGenerate()}
+          onPress={handleGenerate}
         />
       )}
     </ScrollView>

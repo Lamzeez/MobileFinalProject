@@ -27,9 +27,31 @@ const createUsersTable = async () => {
   }
 };
 
+const createLessonPlansTable = async () => {
+  const connection = await pool.getConnection();
+  try {
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS lesson_plans (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        grade VARCHAR(255),
+        subject VARCHAR(255),
+        topic VARCHAR(255),
+        plan_content LONGTEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      );
+    `);
+    console.log('Lesson plans table created or already exists.');
+  } finally {
+    connection.release();
+  }
+};
+
 const initializeDatabase = async () => {
   try {
     await createUsersTable();
+    await createLessonPlansTable(); // Call the new function
     // Add other table creation functions here if needed
   } catch (error) {
     console.error('Failed to initialize database:', error);

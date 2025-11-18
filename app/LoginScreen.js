@@ -5,7 +5,7 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 
 // IMPORTANT: Replace with your computer's local IP address
-const API_URL = 'http://192.168.254.107:3000';
+const API_URL = 'https://unascendent-underfoot-tessa.ngrok-free.dev';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -28,7 +28,7 @@ export default function LoginScreen() {
 
       if (response.ok) {
         Alert.alert('Success', 'Login successful!');
-        router.replace('/FormScreen'); // Use replace to prevent going back to login
+        router.replace({ pathname: '/HomeScreen', params: { userId: data.userId } });
       } else {
         Alert.alert('Login Failed', data.message);
       }
