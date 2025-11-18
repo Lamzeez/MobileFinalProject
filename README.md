@@ -9,7 +9,20 @@ Won't spoil you too much. Keep yourself updated for the outcome of this project.
 
 
 
+<<<<<<< HEAD
 ==========================================
+=======
+
+
+
+
+
+
+
+
+
+=====================================================
+>>>>>>> 1e966a389e8362773f38ad2b27f381f8e6d8d7bf
 HOW TO RUN?
 
 Terminal 1: Backend Server
@@ -39,4 +52,8 @@ Terminal 1: Backend Server
 
         cd D:\...\LessonPlanGenerator
    2. Start the Expo frontend application with the tunnel:
+<<<<<<< HEAD
         npx expo start --tunnel
+=======
+        npx expo start --tunnel
+>>>>>>> 1e966a389e8362773f38ad2b27f381f8e6d8d7bf

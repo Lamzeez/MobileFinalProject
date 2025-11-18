@@ -83,7 +83,7 @@ export default function HomeScreen() {
   const renderTemplateItem = ({ item }) => (
     <Pressable
       style={styles.templateItem}
-      onPress={() => Alert.alert(item.name, item.description)} // For now, just show description
+      onPress={() => router.push({ pathname: '/create', params: { ...item, userId: userId } })}
     >
       <ThemedText type="subtitle">{item.name}</ThemedText>
       <Text>Grade: {item.grade}, Subject: {item.subject}</Text>
@@ -94,13 +94,6 @@ export default function HomeScreen() {
   return (
     <ThemedView style={styles.container}>
       <ThemedText type="title" style={styles.headerTitle}>Dashboard</ThemedText>
-
-      <Pressable
-        style={styles.createPlanButton}
-        onPress={() => router.push({ pathname: '/FormScreen', params: { userId: userId } })}
-      >
-        <Text style={styles.createPlanButtonText}>Create New Lesson Plan</Text>
-      </Pressable>
 
       <View style={styles.section}>
         <ThemedText type="subtitle" style={styles.sectionTitle}>Your Generated Plans</ThemedText>
@@ -141,22 +134,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    paddingTop: 50, // Add padding to avoid overlap with status bar
   },
   headerTitle: {
     textAlign: 'center',
     marginBottom: 20,
-  },
-  createPlanButton: {
-    backgroundColor: '#007BFF',
-    paddingVertical: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  createPlanButtonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
   section: {
     marginBottom: 20,
@@ -165,7 +147,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   list: {
-    maxHeight: 200, // Limit height for scrollability
+    maxHeight: 220, // Limit height for scrollability
     borderWidth: 1,
     borderColor: '#DDD',
     borderRadius: 10,

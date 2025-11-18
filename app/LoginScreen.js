@@ -28,7 +28,7 @@ export default function LoginScreen() {
 
       if (response.ok) {
         Alert.alert('Success', 'Login successful!');
-        router.replace({ pathname: '/HomeScreen', params: { userId: data.userId } });
+        router.replace({ pathname: '/', params: { userId: data.userId } });
       } else {
         Alert.alert('Login Failed', data.message);
       }

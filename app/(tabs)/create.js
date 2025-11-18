@@ -7,19 +7,21 @@ const API_URL = 'https://unascendent-underfoot-tessa.ngrok-free.dev';
 
 const FormScreen = () => {
   const router = useRouter();
-  const { userId } = useLocalSearchParams(); // Get userId from navigation params
+  const params = useLocalSearchParams(); // Get all params
+  const userId = params.userId;
+
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     school: '',
     teacher: '',
-    gradeLevel: '',
-    subject: '',
+    gradeLevel: params.grade || '',
+    subject: params.subject || '',
     quarter: '',
     week: '',
     day: '',
     date: '',
     learningCompetencies: '', // This field is not sent to backend for generation, but kept for form state
-    topic: '',
+    topic: params.topic || '',
   });
 
   const handleInputChange = (field, value) => {
