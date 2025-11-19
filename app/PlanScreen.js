@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Button, ScrollView, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as Clipboard from 'expo-clipboard';
+import Collapsible from '@/components/ui/collapsible'; // Import Collapsible
+import { ThemedText } from '@/components/themed-text'; // Import ThemedText
+import { ThemedView } from '@/components/themed-view'; // Import ThemedView
 
 // IMPORTANT: Replace with your computer's local IP address
-const API_URL = 'https://unascendent-underfoot-tessa.ngrok-free.dev';
+const API_URL = 'https://unascendent-underfoot-tessa.ngrok-free.dev'; // Ensure this matches your local IP
 
 const PlanScreen = () => {
   const router = useRouter();
@@ -118,69 +121,67 @@ const PlanScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Button title="Go Back" onPress={() => router.back()} />
-      <Button title="Copy to Clipboard" onPress={handleCopyToClipboard} />
-      <Text style={styles.header}>Generated Lesson Plan</Text>
+    <ThemedView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Button title="Go Back" onPress={() => router.back()} />
+        <Button title="Copy to Clipboard" onPress={handleCopyToClipboard} />
+        <ThemedText type="title" style={styles.header}>Generated Lesson Plan</ThemedText>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Header Information</Text>
-        <Text><Text style={styles.bold}>School:</Text> {planData.school || 'N/A'}</Text>
-        <Text><Text style={styles.bold}>Teacher:</Text> {planData.teacher || 'N/A'}</Text>
-        <Text><Text style={styles.bold}>Grade Level:</Text> {planData.grade || planData.gradeLevel || 'N/A'}</Text>
-        <Text><Text style={styles.bold}>Subject:</Text> {planData.subject || 'N/A'}</Text>
-        <Text><Text style={styles.bold}>Quarter:</Text> {planData.quarter || 'N/A'}</Text>
-        <Text><Text style={styles.bold}>Week:</Text> {planData.week || 'N/A'}</Text>
-        <Text><Text style={styles.bold}>Day:</Text> {planData.day || 'N/A'}</Text>
-        <Text><Text style={styles.bold}>Date:</Text> {planData.date || 'N/A'}</Text>
-      </View>
+        <Collapsible title="Header Information">
+          <Text><Text style={styles.bold}>School:</Text> {planData.school || 'N/A'}</Text>
+          <Text><Text style={styles.bold}>Teacher:</Text> {planData.teacher || 'N/A'}</Text>
+          <Text><Text style={styles.bold}>Grade Level:</Text> {planData.grade || planData.gradeLevel || 'N/A'}</Text>
+          <Text><Text style={styles.bold}>Subject:</Text> {planData.subject || 'N/A'}</Text>
+          <Text><Text style={styles.bold}>Quarter:</Text> {planData.quarter || 'N/A'}</Text>
+          <Text><Text style={styles.bold}>Week:</Text> {planData.week || 'N/A'}</Text>
+          <Text><Text style={styles.bold}>Day:</Text> {planData.day || 'N/A'}</Text>
+          <Text><Text style={styles.bold}>Date:</Text> {planData.date || 'N/A'}</Text>
+        </Collapsible>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>I. Objectives</Text>
-        <Text>{planData.learningCompetencies || 'N/A'}</Text>
-      </View>
+        <Collapsible title="I. Objectives">
+          <Text>{planData.learningCompetencies || 'N/A'}</Text>
+        </Collapsible>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>II. Content</Text>
-        <Text><Text style={styles.bold}>Topic / Lesson Title:</Text> {planData.topic || 'N/A'}</Text>
-        <Text><Text style={styles.bold}>Reference materials:</Text> {planData.referenceMaterials || 'N/A'}</Text>
-      </View>
+        <Collapsible title="II. Content">
+          <Text><Text style={styles.bold}>Topic / Lesson Title:</Text> {planData.topic || 'N/A'}</Text>
+          <Text><Text style={styles.bold}>Reference materials:</Text> {planData.referenceMaterials || 'N/A'}</Text>
+        </Collapsible>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>III. Learning Resources</Text>
-        <Text>{planData.learningResources || 'N/A'}</Text>
-      </View>
+        <Collapsible title="III. Learning Resources">
+          <Text>{planData.learningResources || 'N/A'}</Text>
+        </Collapsible>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>IV. Procedures</Text>
-        {procedureSteps.map((step, index) => (
-          <View key={index} style={styles.procedureStep}>
-            <Text style={styles.bold}>{step.label}</Text>
-            <Text>{step.value || 'N/A'}</Text>
-          </View>
-        ))}
-      </View>
+        <Collapsible title="IV. Procedures">
+          {procedureSteps.map((step, index) => (
+            <View key={index} style={styles.procedureStep}>
+              <Text style={styles.bold}>{step.label}</Text>
+              <Text>{step.value || 'N/A'}</Text>
+            </View>
+          ))}
+        </Collapsible>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>V. Remarks</Text>
-        <Text>{planData.remarks || 'N/A'}</Text>
-      </View>
+        <Collapsible title="V. Remarks">
+          <Text>{planData.remarks || 'N/A'}</Text>
+        </Collapsible>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>VI. Reflection</Text>
-        <Text>{planData.reflection || 'N/A'}</Text>
-      </View>
+        <Collapsible title="VI. Reflection">
+          <Text>{planData.reflection || 'N/A'}</Text>
+        </Collapsible>
 
-      <Button title="Go Back" onPress={() => router.back()} />
-    </ScrollView>
+        <Button title="Go Back" onPress={() => router.back()} />
+      </ScrollView>
+    </ThemedView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // padding: 20, // Padding moved to scrollContent
+  },
+  scrollContent: {
     padding: 20,
-    backgroundColor: 'white',
+    paddingBottom: 40, // Add some extra padding at the bottom
   },
   loadingContainer: {
     flex: 1,

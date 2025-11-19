@@ -17,12 +17,12 @@ export default function WelcomeScreen() {
           Create complete, high-quality daily lesson logs in minutes using the power of AI.
         </ThemedText>
         <View style={styles.buttonContainer}>
-          <Link href="/LoginScreen" asChild>
+          <Link href="/(auth)/login" asChild>
             <Pressable style={styles.loginPressable}>
               <Text style={styles.buttonText}>Login</Text>
             </Pressable>
           </Link>
-          <Link href="/RegisterScreen" asChild>
+          <Link href="/(auth)/register" asChild>
             <Pressable style={styles.registerPressable}>
               <Text style={styles.buttonText}>Register</Text>
             </Pressable>

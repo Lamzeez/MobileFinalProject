@@ -33,7 +33,7 @@ export default function RegisterScreen() {
 
       if (response.ok) {
         Alert.alert('Success', 'Registration successful! Please login.');
-        router.push('/LoginScreen');
+        router.push('/(auth)/login');
       } else {
         Alert.alert('Registration Failed', data.message);
       }
@@ -76,7 +76,7 @@ export default function RegisterScreen() {
         {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Register</Text>}
       </Pressable>
 
-      <Link href="/LoginScreen" style={styles.link}>
+      <Link href="/(auth)/login" style={styles.link}>
         <Text>Already have an account? Login</Text>
       </Link>
     </ThemedView>

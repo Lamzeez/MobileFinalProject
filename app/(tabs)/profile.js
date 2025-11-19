@@ -3,13 +3,15 @@ import { StyleSheet, Text, View, Pressable, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { useAuth } from '@/context/AuthContext'; // Import useAuth
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const { signOut } = useAuth(); // Use the signOut function from AuthContext
 
   const handleLogout = () => {
     // In a real app, you would clear the user's session/token here
-    router.replace('/LoginScreen');
+    signOut(); // Call signOut to update global auth state
     Alert.alert("Logged Out", "You have been successfully logged out.");
   };
 

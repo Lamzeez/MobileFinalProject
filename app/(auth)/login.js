@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TextInput, Pressable, Alert, ActivityIndicator 
 import { Link, useRouter } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { useAuth } from '@/context/AuthContext'; // Import useAuth
 
 // IMPORTANT: Replace with your computer's local IP address
 const API_URL = 'https://unascendent-underfoot-tessa.ngrok-free.dev';
@@ -12,6 +13,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { signIn } = useAuth(); // Use the signIn function from AuthContext
 
   const handleLogin = async () => {
     setLoading(true);
@@ -28,7 +30,7 @@ export default function LoginScreen() {
 
       if (response.ok) {
         Alert.alert('Success', 'Login successful!');
-        router.replace({ pathname: '/', params: { userId: data.userId } });
+        signIn({ userId: data.userId }); // Call signIn to update global auth state
       } else {
         Alert.alert('Login Failed', data.message);
       }
@@ -64,7 +66,7 @@ export default function LoginScreen() {
         {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Login</Text>}
       </Pressable>
 
-      <Link href="/RegisterScreen" style={styles.link}>
+      <Link href="/(auth)/register" style={styles.link}>
         <Text>Don't have an account? Register</Text>
       </Link>
     </ThemedView>

@@ -1,54 +1,18 @@
-Web Bundling failed 728ms node_modules\expo-router\entry.js (619 modules)
-Web node_modules\expo-router\entry.js ▓▓▓▓▓▓▓▓▓▓▓▓░░░░ 76.4% (541/619)
-λ node_modules\expo-router\node\render.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 94.9% (753/773)
-Error: Cannot pipe to a closed or destroyed stream
-    at pipelineImpl (node:internal/streams/pipeline:264:15)
-    at node:stream/promises:31:5
-    at new Promise (<anonymous>)
-    at pipeline (node:stream/promises:20:10)
-    at respond (D:\Documents\Studies\SY_2025-2026\ITMSD 1\LessonPlanGenerator\LessonPlanGenerator\node_modules\expo-server\src\vendor\http.ts:138:19)
-
-Metro error: Unable to resolve module expo-clipboard from D:\Documents\Studies\SY_2025-2026\ITMSD 1\LessonPlanGenerator\LessonPlanGenerator\app\HomeScreen.js: expo-clipboard could not be found within the project or in these directories:
-  node_modules
-   5 | import { ThemedView } from '@/components/themed-view';
-   6 | import { useLocalSearchParams } from 'expo-router';
->  7 | import * as Clipboard from 'expo-clipboard';
-     |                             ^
-   8 |
-   9 | // IMPORTANT: Replace with your computer's local IP address
-  10 | const API_URL = 'http://192.168.254.107:3000'; // Ensure this matches your local IP
-
-Import stack:
-
- app\HomeScreen.js
- | import "expo-clipboard"
-
- app (require.context)
+Unmatched Route
+Page could not be found.
+http://localhost:8082
+Go back
+•
+Sitemap
 
 
-Call Stack
-  <unknown> (app\HomeScreen.js)
-λ Bundling failed 750ms node_modules\expo-router\node\render.js (773 modules)
-Web Bundling failed 381ms node_modules\expo-router\entry.js (619 modules)
-
-Metro error: Unable to resolve module expo-clipboard from D:\Documents\Studies\SY_2025-2026\ITMSD 1\LessonPlanGenerator\LessonPlanGenerator\app\HomeScreen.js: expo-clipboard could not be found within the project or in these directories:
-  node_modules
-   5 | import { ThemedView } from '@/components/themed-view';
-   6 | import { useLocalSearchParams } from 'expo-router';
->  7 | import * as Clipboard from 'expo-clipboard';
-     |                             ^
-   8 |
-   9 | // IMPORTANT: Replace with your computer's local IP address
-  10 | const API_URL = 'http://192.168.254.107:3000'; // Ensure this matches your local IP
-
-Import stack:
-
- app\HomeScreen.js
- | import "expo-clipboard"
-
- app (require.context)
-
-
-Call Stack
-  <unknown> (app\HomeScreen.js)
-λ Bundling failed 390ms node_modules\expo-router\node\render.js (563 modules)
+Logs for your project will appear below. Press Ctrl+C to exit.
+λ Bundled 901ms node_modules\expo-router\node\render.js (443 modules)     
+Web node_modules\expo-router\entry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 81.9% (675/746)    
+Web Bundled 1763ms node_modules\expo-router\entry.js (816 modules)
+Web Bundled 210ms node_modules\expo-router\entry.js (596 modules)
+ LOG  [web] Logs will appear in the browser console
+Web node_modules\expo-router\entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ Bundled 26ms node_modules\expo-router\node\render.js (1 module)
+Web Bundled 186ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 30ms node_modules\expo-router\entry.js (1 module)

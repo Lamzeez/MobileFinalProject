@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Pressable, FlatList, Alert, ActivityIndicator } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { StyleSheet, Text, View, FlatList, Alert, ActivityIndicator } from 'react-native';
+import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { useLocalSearchParams } from 'expo-router';
+import { useAuth } from '@/context/AuthContext'; // Import useAuth
 import * as Clipboard from 'expo-clipboard';
+import { Card } from '@/components/Card'; // Import the new Card component
 
 // IMPORTANT: Replace with your computer's local IP address
 const API_URL = 'https://unascendent-underfoot-tessa.ngrok-free.dev';
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { userId } = useLocalSearchParams(); // Get userId from navigation params
+  const { user } = useAuth(); // Get user from AuthContext
+  const userId = user?.userId; // Safely access userId
   const [history, setHistory] = useState([]);
   const [templates, setTemplates] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
@@ -22,9 +24,9 @@ export default function HomeScreen() {
       fetchHistory();
       fetchTemplates();
     } else {
-      // If userId is not available, maybe redirect to login or show an error
-      Alert.alert("Error", "User not logged in. Please log in again.");
-      router.replace('/LoginScreen');
+      // This else block might not be necessary anymore with the root layout handling redirection
+      // but as a safeguard, we'll keep it from doing a broken redirect.
+      console.log("No user ID found, waiting for redirect.");
     }
   }, [userId]);
 
@@ -70,25 +72,25 @@ export default function HomeScreen() {
   };
 
   const renderHistoryItem = ({ item }) => (
-    <Pressable
-      style={styles.historyItem}
+    <Card
       onPress={() => router.push({ pathname: '/plan', params: { planId: item.id, userId: userId } })}
+      style={styles.card}
     >
       <ThemedText type="subtitle">{item.topic}</ThemedText>
       <Text>Grade: {item.grade}, Subject: {item.subject}</Text>
       <Text style={styles.dateText}>{new Date(item.created_at).toLocaleDateString()}</Text>
-    </Pressable>
+    </Card>
   );
 
   const renderTemplateItem = ({ item }) => (
-    <Pressable
-      style={styles.templateItem}
+    <Card
       onPress={() => router.push({ pathname: '/create', params: { ...item, userId: userId } })}
+      style={styles.card}
     >
       <ThemedText type="subtitle">{item.name}</ThemedText>
       <Text>Grade: {item.grade}, Subject: {item.subject}</Text>
       <Text>{item.description}</Text>
-    </Pressable>
+    </Card>
   );
 
   return (
@@ -148,26 +150,9 @@ const styles = StyleSheet.create({
   },
   list: {
     maxHeight: 220, // Limit height for scrollability
-    borderWidth: 1,
-    borderColor: '#DDD',
-    borderRadius: 10,
-    padding: 10,
   },
-  historyItem: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#EEE',
-    backgroundColor: '#F9F9F9',
-    borderRadius: 8,
-    marginBottom: 8,
-  },
-  templateItem: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#EEE',
-    backgroundColor: '#E6F7FF', // Light blue for templates
-    borderRadius: 8,
-    marginBottom: 8,
+  card: {
+    marginBottom: 10, // Add margin between cards
   },
   dateText: {
     fontSize: 12,
